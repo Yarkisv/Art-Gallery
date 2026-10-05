@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import { router } from "./Routes/artwork.route.js";
+import { router } from "./routes/artwork.route.js";
 import cors from "cors";
 
 dotenv.config({ quiet: true });

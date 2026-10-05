@@ -1,22 +1,12 @@
-import axios from "axios";
-import type { Artwork } from "../../types/artwork.type.ts";
+import { removeArtwork } from "../../api/artwork.api.ts";
+import type { ArtworkCardProps } from "../../types/artworkCardProps.type.ts";
 import "./ArtworkCard.css";
 
-type ArtworkCardProps = {
-  artwork: Artwork;
-  onSuccess: () => void;
-};
-
 function ArtworkCard({ artwork, onSuccess }: ArtworkCardProps) {
-  const API = import.meta.env.VITE_API;
-
-  const removeArtwork = async (artwork_id: string) => {
+  const deleteArtwork = async (artwork_id: string) => {
     try {
-      const response = await axios.delete(`${API}/artworks/${artwork_id}`);
-
-      if (response.status === 204) {
-        onSuccess();
-      }
+      await removeArtwork(artwork_id);
+      onSuccess();
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +29,7 @@ function ArtworkCard({ artwork, onSuccess }: ArtworkCardProps) {
         {artwork.availability ? "Available" : "Not available"}
       </p>
 
-      <button className="remove-btn" onClick={() => removeArtwork(artwork.id)}>
+      <button className="remove-btn" onClick={() => deleteArtwork(artwork.id)}>
         Remove artwork
       </button>
     </article>

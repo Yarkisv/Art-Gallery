@@ -99,6 +99,8 @@ export class ArtworkController {
   static async deleteOneArtwork(req, res) {
     const artwork_id = req.params.id;
 
+    console.log(artwork_id);
+
     try {
       const artwork = await ArtworkService.deleteOneArtwork(artwork_id);
 

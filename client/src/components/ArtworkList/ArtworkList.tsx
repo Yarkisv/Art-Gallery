@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import "./ArtworkList.css";
-import axios from "axios";
 import type { Artwork } from "../../types/artwork.type.ts";
 import ArtworkCard from "../ArtworkCard/ArtworkCard.tsx";
 import { useModal } from "../../contexts/modal.context.tsx";
+import { getAllArtworks } from "../../api/artwork.api.ts";
 
 function ArtworkList() {
-  const API = import.meta.env.VITE_API;
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
   const [artist, setArtist] = useState<string>("");
@@ -16,19 +15,11 @@ function ArtworkList() {
 
   const getArtworks = async () => {
     try {
-      const response = await axios.get(`${API}/artworks`, {
-        params: {
-          price: sortOption,
-          type: type,
-          artist: artist,
-        },
-      });
+      const data = await getAllArtworks(sortOption, type, artist);
 
-      if (response.data) {
-        console.log(response.data.artworks);
+      console.log(data);
 
-        setArtworks(response.data.artworks);
-      }
+      setArtworks(data);
     } catch (error) {
       console.log(error);
     }
@@ -92,7 +83,11 @@ function ArtworkList() {
         {artworks.length > 0 ? (
           <div className="grid-container">
             {artworks.map((artwork) => (
-              <ArtworkCard artwork={artwork} key={artwork.id} onSuccess={getArtworks}/>
+              <ArtworkCard
+                artwork={artwork}
+                key={artwork.id}
+                onSuccess={getArtworks}
+              />
             ))}
           </div>
         ) : (

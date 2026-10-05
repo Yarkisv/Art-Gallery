@@ -1,19 +1,10 @@
-import axios from "axios";
 import "./AddArtworkForm.css";
 import React, { useState } from "react";
 import { useModal } from "../../contexts/modal.context";
+import type { IArtwork } from "../../types/artwork.form.type";
+import { createArtwork } from "../../api/artwork.api";
 
 function AddArtworkForm() {
-  const API = import.meta.env.VITE_API;
-
-  interface IArtwork {
-    title: string;
-    artist: string;
-    type: "painting" | "sculpture" | null;
-    price: string;
-    availability: boolean;
-  }
-
   const [newArtwork, setNewArtwork] = useState<IArtwork>({
     title: "",
     artist: "",
@@ -38,20 +29,13 @@ function AddArtworkForm() {
     }));
   };
 
-  const createNewArtwork = async () => {
+  const createNewArtwork = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     try {
-      const artworkToSend = {
-        ...newArtwork,
-        price: Number(newArtwork.price),
-      };
+      await createArtwork(newArtwork);
 
-      const response = await axios.post(`${API}/artworks`, {
-        newArtwork: artworkToSend,
-      });
-
-      if (response.status === 201) {
-        closeAddArtworkModal();
-      }
+      closeAddArtworkModal();
     } catch (error) {
       console.log(error);
     }
