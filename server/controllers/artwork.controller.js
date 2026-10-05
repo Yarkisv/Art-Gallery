@@ -7,23 +7,23 @@ export class ArtworkController {
     if (!title || title.length > 99) {
       return res
         .status(400)
-        .json({ message: "Title max length must be less then 99 characters" });
+        .json({ message: "Title must be less than 99 characters long." });
     }
 
     if (!artist && artist.length > 50) {
       return res
         .status(400)
-        .json({ message: "Artist max length must be less then 50 characters" });
+        .json({ message: "Artist must be less than 50 characters." });
     }
 
     if (!["painting", "sculpture"].includes(type)) {
-      return res.status(400).json({ message: "Invalid artwork type" });
+      return res.status(400).json({ message: "Invalid artwork type." });
     }
 
     if (typeof price !== "number" && price < 0) {
       return res
         .status(400)
-        .json({ message: "Price must be a number, more then 0" });
+        .json({ message: "Price must be a positive number." });
     }
 
     try {
@@ -42,9 +42,10 @@ export class ArtworkController {
       });
     } catch (error) {
       console.log("Server error: ", error);
-      res
-        .status(500)
-        .json({ success: false, message: `Server error ${error}` });
+      res.status(500).json({
+        success: false,
+        message: "Internal server error.",
+      });
     }
   }
 
@@ -66,8 +67,8 @@ export class ArtworkController {
     } catch (error) {
       console.log("Server error", error);
       res.status(500).json({
-        succes: false,
-        message: `Server error during selecting: ${error}`,
+        success: false,
+        message: "Internal server error.",
       });
     }
   }
@@ -90,8 +91,8 @@ export class ArtworkController {
     } catch (error) {
       console.log("Server error", error);
       res.status(500).json({
-        succes: false,
-        message: `Server error during selecting: ${error}`,
+        success: false,
+        message: "Internal server error.",
       });
     }
   }
@@ -116,9 +117,10 @@ export class ArtworkController {
         .json({ success: true, message: "Artwork was successfuly deleted" });
     } catch (error) {
       console.log(`Server error ${error}`);
-      res
-        .status(500)
-        .json({ succes: false, message: "Server error during deleting" });
+      res.status(500).json({
+        success: false,
+        message: "Server error while deleting artwork.",
+      });
     }
   }
 
