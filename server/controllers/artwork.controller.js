@@ -1,10 +1,8 @@
-import { pool } from "../database/index.js";
+import { ArtworkService } from "../services/artwork.service.js";
 
 export class ArtworkController {
   static async createArtwork(req, res) {
     const { title, artist, type, price, availability } = req.body.newArtwork;
-
-    console.log(req.body);
 
     if (!title || title.length > 99) {
       return res
@@ -28,21 +26,18 @@ export class ArtworkController {
         .json({ message: "Price must be a number, more then 0" });
     }
 
-    const query =
-      "insert into artwork (title, artist, type, price, availability) values ($1, $2, $3, $4, $5) returning *";
-
     try {
-      const newArtwork = await pool.query(query, [
+      const artwork = await ArtworkService.createArtwork(
         title,
         artist,
         type,
         price,
         availability,
-      ]);
+      );
 
       res.status(201).json({
         success: true,
-        artwork: newArtwork.rows[0],
+        artwork,
         message: "Data has been successfuly added to db",
       });
     } catch (error) {
@@ -56,26 +51,8 @@ export class ArtworkController {
   static async getAllArtworks(req, res) {
     const { price, artist, type } = req.query;
 
-    let query = "select * from artwork";
-
-    if (artist) {
-      query += ` where artist like '%${artist}%'`;
-    }
-
-    if (type && query.includes("where")) {
-      query += ` and type like '%${type}%'`;
-    } else if (type) {
-      query += ` where type like '%${type}%'`;
-    }
-
-    if (price === "desc" || price === "asc") {
-      query += ` order by price ${price}`;
-    }
-
-    console.log(query);
-
     try {
-      const artworks = (await pool.query(query)).rows;
+      const artworks = await ArtworkService.getAllArtworks(price, artist, type);
 
       if (!artworks) {
         return res.status(404).json({ message: "Artworks not found" });
@@ -98,10 +75,8 @@ export class ArtworkController {
   static async getOneArtwork(req, res) {
     const artwork_id = req.params.id;
 
-    const query = "select * from artwork where id = $1";
-
     try {
-      const artwork = (await pool.query(query, [artwork_id])).rows[0];
+      const artwork = await ArtworkService.getOneArtwork(artwork_id);
 
       if (!artwork) {
         return res.status(404).json({ message: "Artworks not found" });
@@ -124,12 +99,15 @@ export class ArtworkController {
   static async deleteOneArtwork(req, res) {
     const artwork_id = req.params.id;
 
-    console.log(artwork_id);
-
-    const query = "delete from artwork where id = $1";
-
     try {
-      await pool.query(query, [artwork_id]);
+      const artwork = await ArtworkService.deleteOneArtwork(artwork_id);
+
+      if (!artwork) {
+        return res.status(404).json({
+          success: false,
+          message: "Artwork not found",
+        });
+      }
 
       res
         .status(204)

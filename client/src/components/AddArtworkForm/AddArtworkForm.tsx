@@ -10,7 +10,7 @@ function AddArtworkForm() {
     title: string;
     artist: string;
     type: "painting" | "sculpture" | null;
-    price: number;
+    price: string;
     availability: boolean;
   }
 
@@ -18,7 +18,7 @@ function AddArtworkForm() {
     title: "",
     artist: "",
     type: null,
-    price: 0,
+    price: "",
     availability: false,
   });
 
@@ -40,10 +40,13 @@ function AddArtworkForm() {
 
   const createNewArtwork = async () => {
     try {
-      console.log(newArtwork);
+      const artworkToSend = {
+        ...newArtwork,
+        price: Number(newArtwork.price),
+      };
 
       const response = await axios.post(`${API}/artworks`, {
-        newArtwork,
+        newArtwork: artworkToSend,
       });
 
       if (response.status === 201) {
@@ -105,7 +108,8 @@ function AddArtworkForm() {
               type="number"
               name="price"
               id="price"
-              min={0.01}
+              min="0.01"
+              step="0.01"
               required
               value={newArtwork.price}
               onChange={handleChange}
