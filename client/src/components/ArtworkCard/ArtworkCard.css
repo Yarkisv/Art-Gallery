@@ -1,0 +1,51 @@
+.artwork-card {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 2px solid black;
+  padding: 12px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.block {
+  height: 180px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: rgb(0 2250 0);
+}
+
+.artwork-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.available {
+  color: rgb(0 2250 0);
+  font-weight: 600;
+}
+
+.not-available {
+  color: rgb(255 0 0);
+  font-weight: 600;
+}
+
+.remove-btn {
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid rgb(255 0 0);
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #fff;
+  color: #dc2626;
+  margin-top: auto;
+}
+
+.remove-btn:hover {
+  background-color: rgb(255 0 0);
+  color: #fff;
+}
